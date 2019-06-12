@@ -1,3 +1,4 @@
 # ignore the build files
 .dart_tool/
+build/
 
