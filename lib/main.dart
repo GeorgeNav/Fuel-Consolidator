@@ -66,9 +66,7 @@ class MyHomePage extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Text(
-            'Hello, World!',
-          ),
+          Text('Hello There!'),
         ],
       ),
     ),
