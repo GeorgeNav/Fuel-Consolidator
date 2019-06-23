@@ -1,5 +1,10 @@
 .packages
+assets/AssetManifest.json
 assets/FontManifest.json
+assets/images/.DS_Store
+assets/images/barrel.png
+assets/images/fire.svg
+assets/images/gas.svg
 index.html
 main.dart.js
 packages/$sdk/_internal/ddc_sdk.sum
