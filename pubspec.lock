@@ -56,7 +56,7 @@ packages:
       name: build_daemon
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0"
+    version: "1.1.0"
   build_modules:
     dependency: transitive
     description:
@@ -77,7 +77,7 @@ packages:
       name: build_runner
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.5.2"
+    version: "1.6.0"
   build_runner_core:
     dependency: transitive
     description:
@@ -91,7 +91,7 @@ packages:
       name: build_web_compilers
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.0"
+    version: "2.1.1"
   built_collection:
     dependency: transitive
     description:
@@ -174,7 +174,7 @@ packages:
     description:
       path: "packages/flutter_web"
       ref: HEAD
-      resolved-ref: "7f588d1f2741f069e19647703d7eb6dd4ff0f464"
+      resolved-ref: "1ed4317aa91038ba99531037ce00c04672c4bee1"
       url: "https://github.com/flutter/flutter_web"
     source: git
     version: "0.0.0"
@@ -183,7 +183,7 @@ packages:
     description:
       path: "packages/flutter_web_ui"
       ref: HEAD
-      resolved-ref: "7f588d1f2741f069e19647703d7eb6dd4ff0f464"
+      resolved-ref: "1ed4317aa91038ba99531037ce00c04672c4bee1"
       url: "https://github.com/flutter/flutter_web"
     source: git
     version: "0.0.0"
@@ -291,7 +291,7 @@ packages:
       name: meta
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.7"
+    version: "1.1.6"
   mime:
     dependency: transitive
     description:
@@ -341,6 +341,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.13.12"
+  provider:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: flutter_web
+      resolved-ref: e41db8e7d554360a6d8314c23b4fb4d5d5d9aac4
+      url: "https://github.com/kevmoo/provider"
+    source: git
+    version: "3.0.0+1"
   pub_semver:
     dependency: transitive
     description:
@@ -473,6 +482,6 @@ packages:
       name: yaml
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.15"
+    version: "2.1.16"
 sdks:
   dart: ">=2.3.0 <3.0.0"
