@@ -47,6 +47,7 @@ path:packages/path/
 pedantic:packages/pedantic/
 pool:packages/pool/
 protobuf:packages/protobuf/
+provider:packages/provider/
 pub_semver:packages/pub_semver/
 pubspec_parse:packages/pubspec_parse/
 quiver:packages/quiver/
