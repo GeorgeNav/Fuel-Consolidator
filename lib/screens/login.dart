@@ -17,45 +17,54 @@ class _SignInState extends State<SignIn> {
         width: 400,
         child: Column(
           children: <Widget>[
-            TextFormField(
-              decoration: InputDecoration(
-                hintText: 'email',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5.0),
-                  borderSide: BorderSide(),
-                ),
-              ),
+            Container(
+              width: 100,
+              height: 100,
+              child: Icon(Icons.data_usage),
             ),
-            TextFormField(
-              obscureText: true,
-              decoration: InputDecoration(
-                hintText: 'password',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5.0),
-                  borderSide: BorderSide(),
-                ),
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                FlatButton(
-                  onPressed: () => null,
-                  color: Colors.white,
-                  textColor: Colors.black,
-                  child: Text('Login'),
-                ),
-                FlatButton(
-                  onPressed: () => Navigator.pushNamed(context, '/createaccount'),
-                  color: Colors.white,
-                  textColor: Colors.black,
-                  child: Text('Create Account'),
-                ),
-              ],
-            ),
+            /* Image(image: AssetImage('images/barrel.png')), */
+            _signInForm(),
           ],
         ),
       ),
+    ),
+  );
+
+  Widget _signInForm() => Container(
+    color: Colors.red,
+    padding: EdgeInsets.all(8),
+    child: Column(
+      children: <Widget>[
+        TextFormField(
+          decoration: InputDecoration(
+            hintText: 'email',
+          ),
+        ),
+        TextFormField(
+          obscureText: true,
+          decoration: InputDecoration(
+            hintText: 'password',
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            FlatButton(
+              onPressed: () => null,
+              color: Colors.white,
+              textColor: Colors.black,
+              child: Text('Login'),
+            ),
+            FlatButton(
+              onPressed: () =>
+                  Navigator.pushNamed(context, '/createaccount'),
+              color: Colors.white,
+              textColor: Colors.black,
+              child: Text('Create Account'),
+            ),
+          ],
+        ),
+      ],
     ),
   );
 }
@@ -71,39 +80,28 @@ class _CreateAccountState extends State<CreateAccount> {
   Widget build(BuildContext context) => Scaffold(
     body: Center(
       child: Container(
+        color: Colors.red,
+        padding: EdgeInsets.all(8),
         width: 400,
-          child: Column(
+        child: Column(
           children: <Widget>[
             TextFormField(
               decoration: InputDecoration(
                 hintText: 'email',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5.0),
-                  borderSide: BorderSide(),
-                ),
               ),
             ),
             TextFormField(
               obscureText: true,
               decoration: InputDecoration(
                 hintText: 'password',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5.0),
-                  borderSide: BorderSide(),
-                ),
               ),
             ),
             TextFormField(
               obscureText: true,
               decoration: InputDecoration(
                 hintText: 're-enter password',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5.0),
-                  borderSide: BorderSide(),
-                ),
               ),
             ),
-
             FlatButton(
               onPressed: () => Navigator.pop(context),
               color: Colors.white,

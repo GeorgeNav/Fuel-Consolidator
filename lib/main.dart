@@ -29,6 +29,8 @@ class MyApp extends StatelessWidget {
     title: 'Fuel Consolidator',
     theme: ThemeData(
       primarySwatch: Colors.blue,
+      primaryColor: Colors.redAccent,
+      primaryColorDark: Colors.red,
     ),
     routes: {
       '/signin': (context) => SignIn(),
