@@ -1,13 +1,17 @@
+import 'package:firebase/firebase_io.dart';
 import 'package:flutter_web/material.dart';
 import 'package:firebase/firebase.dart';
 import 'util/db_util.dart';
 import 'screens/login.dart';
+import 'package:provider/provider.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   App myApp;
-  DBUtil d;
+  DBUtil db;
+  Auth a;
+  UserCredential uc;
 
   MyApp() {
     myApp = initializeApp(
@@ -20,23 +24,33 @@ class MyApp extends StatelessWidget {
       name: "1:215639791821:web:31362194cdc54d9d",
     );
 
-    DBUtil du = DBUtil(myApp);
-    // d.databaseAltering();
+    DBUtil db = DBUtil(myApp);
+    a = auth(myApp);
+
+    // db.databaseAltering();
   }
 
   @override
-  Widget build(BuildContext context) => MaterialApp(
-    title: 'Fuel Consolidator',
-    theme: ThemeData(
-      primarySwatch: Colors.blue,
-      primaryColor: Colors.redAccent,
-      primaryColorDark: Colors.red,
+  Widget build(BuildContext context) => MultiProvider(
+    providers: [
+        Provider<App>.value(value: myApp),
+        Provider<DBUtil>.value(value: db),
+        Provider<Auth>.value(value: a),
+        Provider<UserCredential>.value(value: uc),
+    ],
+    child: MaterialApp(
+      title: 'Fuel Consolidator',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        primaryColor: Colors.lightBlueAccent,
+        primaryColorDark: Colors.blueGrey,
+      ),
+      routes: {
+        '/signin': (context) => SignIn(),
+        '/createaccount': (context) => CreateAccount(),
+      },
+      initialRoute: '/signin',
     ),
-    routes: {
-      '/signin': (context) => SignIn(),
-      '/createaccount': (context) => CreateAccount(),
-    },
-    initialRoute: '/signin',
   );
 }
 

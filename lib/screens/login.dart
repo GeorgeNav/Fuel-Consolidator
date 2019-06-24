@@ -2,6 +2,7 @@ import 'package:flutter_web/material.dart';
 import 'package:firebase/firebase.dart';
 import 'package:firebase/firestore.dart';
 import '../util/db_util.dart';
+import 'package:provider/provider.dart';
 
 class SignIn extends StatefulWidget {
   SignIn({Key key}) : super(key: key);
@@ -10,11 +11,16 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
+  String _email;
+  String _password;
+  bool _invalidLogIn = false;
+
   @override
   Widget build(BuildContext context) => Scaffold(
+    backgroundColor: Colors.lightBlue,
     body: Center(
       child: Container(
-        width: 400,
+        width: 500,
         child: Column(
           children: <Widget>[
             Container(
@@ -31,42 +37,71 @@ class _SignInState extends State<SignIn> {
   );
 
   Widget _signInForm() => Container(
-    color: Colors.red,
     padding: EdgeInsets.all(8),
+    margin: EdgeInsets.all(8),
     child: Column(
       children: <Widget>[
-        TextFormField(
+        TextField(
           decoration: InputDecoration(
             hintText: 'email',
           ),
+          onChanged: (String input) => _email = input,
         ),
-        TextFormField(
+        TextField(
           obscureText: true,
           decoration: InputDecoration(
             hintText: 'password',
           ),
+          onChanged: (String input) => _password = input,
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             FlatButton(
-              onPressed: () => null,
-              color: Colors.white,
+              onPressed: () {
+                _logIn();
+              },
               textColor: Colors.black,
               child: Text('Login'),
             ),
             FlatButton(
-              onPressed: () =>
-                  Navigator.pushNamed(context, '/createaccount'),
-              color: Colors.white,
+              onPressed: () {
+                  Navigator.pushNamed(context, '/createaccount');
+              },
               textColor: Colors.black,
               child: Text('Create Account'),
             ),
           ],
         ),
+        if(_invalidLogIn) Text('Invalid credentials or account doesn\'t exist'),
       ],
     ),
   );
+
+  void _logIn() {
+    var a = Provider.of<Auth>(context);
+    a.signInWithEmailAndPassword(_email, _password)
+    .then((_) {
+      a.currentUser.getIdToken().then((String id) {
+        print('Your id: ' + id);
+      });
+      if(a.currentUser.emailVerified) {
+        print(a.currentUser.email + ' is verified and signed in');
+      } else {
+        a.signOut();
+        print('Please verify your email!');
+      }
+      setState(() {
+        _invalidLogIn = false;
+      });
+    }).catchError((error) {
+      print(error);
+      print('Could not sign in');
+      setState(() {
+        _invalidLogIn = true;
+      });
+    });
+  }
 }
 
 class CreateAccount extends StatefulWidget {
@@ -76,35 +111,56 @@ class CreateAccount extends StatefulWidget {
 }
 
 class _CreateAccountState extends State<CreateAccount> {
+  TextEditingController _email = TextEditingController();
+  TextEditingController _password = TextEditingController();
+  TextEditingController _same_password = TextEditingController();
+
   @override
   Widget build(BuildContext context) => Scaffold(
     body: Center(
       child: Container(
-        color: Colors.red,
         padding: EdgeInsets.all(8),
-        width: 400,
+        margin: EdgeInsets.all(8),
+        width: 500,
         child: Column(
           children: <Widget>[
-            TextFormField(
+            TextField(
+              controller: _email,
               decoration: InputDecoration(
                 hintText: 'email',
               ),
+              onChanged: (String text) {
+                setState(() {});
+              },
             ),
-            TextFormField(
+            if(!_validEmail()) Text('Please enter a valid email address'),
+            TextField(
+              controller: _password,
               obscureText: true,
               decoration: InputDecoration(
                 hintText: 'password',
               ),
+              onChanged: (String text) {
+                setState(() {});
+              },
             ),
-            TextFormField(
+            TextField(
+              controller: _same_password,
               obscureText: true,
               decoration: InputDecoration(
                 hintText: 're-enter password',
               ),
+              onChanged: (String text) {
+                setState(() {});
+              },
             ),
+            if(_password.text != _same_password.text) Text('Password needs to match!'),
             FlatButton(
-              onPressed: () => Navigator.pop(context),
-              color: Colors.white,
+              onPressed: () async {
+                if(await _createUser()) {
+                  Navigator.pop(context);
+                }
+              },
               textColor: Colors.black,
               child: Text('Create Account'),
             ),
@@ -113,4 +169,30 @@ class _CreateAccountState extends State<CreateAccount> {
       ),
     ),
   );
+
+  bool _validEmail() {
+    String p = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    RegExp regExp = new RegExp(p);
+
+    return regExp.hasMatch(_email.text);
+  }
+
+  bool _createUser() {
+    Auth a = Provider.of<Auth>(context);
+
+    a.createUserWithEmailAndPassword(_email.text, _password.text)
+    .then((_) {
+      setState(() {
+        print('Account Created!');
+        a.currentUser.sendEmailVerification();
+      });
+      a.currentUser.getIdToken().then((String id) {
+        print('Your id: ' + id);
+      });
+    }).catchError((error) {
+      print(error);
+      return false;
+    });
+    return true;
+  }
 }
