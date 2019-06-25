@@ -1,6 +1,6 @@
-import 'package:firebase/firebase_io.dart';
 import 'package:flutter_web/material.dart';
 import 'package:firebase/firebase.dart';
+import 'package:firebase/firestore.dart';
 import 'util/db_util.dart';
 import 'screens/login.dart';
 import 'package:provider/provider.dart';
@@ -8,10 +8,10 @@ import 'package:provider/provider.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  App myApp;
-  DBUtil db;
-  Auth a;
   UserCredential uc;
+  DBUtil db;
+  App myApp;
+  Auth a;
 
   MyApp() {
     myApp = initializeApp(
@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
       name: "1:215639791821:web:31362194cdc54d9d",
     );
 
-    DBUtil db = DBUtil(myApp);
+    db = DBUtil(myApp);
     a = auth(myApp);
 
     // db.databaseAltering();

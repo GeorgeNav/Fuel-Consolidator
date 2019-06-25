@@ -82,9 +82,7 @@ class _SignInState extends State<SignIn> {
     var a = Provider.of<Auth>(context);
     a.signInWithEmailAndPassword(_email, _password)
     .then((_) {
-      a.currentUser.getIdToken().then((String id) {
-        print('Your id: ' + id);
-      });
+      print('Your id: ' + a.currentUser.uid);
       if(a.currentUser.emailVerified) {
         print(a.currentUser.email + ' is verified and signed in');
       } else {
@@ -111,6 +109,12 @@ class CreateAccount extends StatefulWidget {
 }
 
 class _CreateAccountState extends State<CreateAccount> {
+  Map<String, dynamic> data = {
+    'first_name': '',
+    'last_name': '',
+    'rate_history': [],
+    'requested_gallons': 0,
+  };
   TextEditingController _email = TextEditingController();
   TextEditingController _password = TextEditingController();
   TextEditingController _same_password = TextEditingController();
@@ -134,6 +138,22 @@ class _CreateAccountState extends State<CreateAccount> {
               },
             ),
             if(!_validEmail()) Text('Please enter a valid email address'),
+            TextField(
+              decoration: InputDecoration(
+                hintText: 'first name',
+              ),
+              onChanged: (String text) {
+                data['first_name'] = text;
+              },
+            ),
+            TextField(
+              decoration: InputDecoration(
+                hintText: 'last name',
+              ),
+              onChanged: (String text) {
+                data['last_name'] = text;
+              },
+            ),
             TextField(
               controller: _password,
               obscureText: true,
@@ -181,18 +201,17 @@ class _CreateAccountState extends State<CreateAccount> {
     Auth a = Provider.of<Auth>(context);
 
     a.createUserWithEmailAndPassword(_email.text, _password.text)
-    .then((_) {
-      setState(() {
-        print('Account Created!');
+      .then((_) {
         a.currentUser.sendEmailVerification();
-      });
-      a.currentUser.getIdToken().then((String id) {
-        print('Your id: ' + id);
-      });
-    }).catchError((error) {
-      print(error);
-      return false;
+        DBUtil db = Provider.of<DBUtil>(context);
+        db.createUserDoc(a.currentUser.uid, data);
+        print('Account Created!');
+        return true;
+      })
+      .catchError((error) {
+        print('CREATE_USER_ERROR: ' + error);
+        return false;
     });
-    return true;
+
   }
 }

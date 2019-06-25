@@ -2,18 +2,21 @@ import 'package:firebase/firebase.dart';
 import 'package:firebase/firestore.dart';
 
 class DBUtil {
-  Firestore fsInstance;
-  App myApp;
+  Firestore fs;
 
   DBUtil(App myApp) {
-    fsInstance = firestore(myApp);
+    fs = firestore(myApp);
   }
 
-  databaseAltering() {
-    var sourceColRef = fsInstance.collection('sources');
+  void createUserDoc(String primary_key, Map<String, dynamic>data) {
+    fs.collection('users').doc(primary_key).set(data);
+  }
+
+  void databaseAltering() {
+    var sourceColRef = fs.collection('sources');
     sourceColRef.doc('testDoc1').set({
       'key': 'value',
-      'price': 45,
+      'price': 45
     });
     sourceColRef.doc('testDoc2').set({'key': 'value'});
     sourceColRef.doc('testDoc3').set({'key': 'value'});
