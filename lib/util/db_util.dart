@@ -8,8 +8,8 @@ class DBUtil {
     fs = firestore(myApp);
   }
 
-  void createUserDoc(String primary_key, Map<String, dynamic>data) {
-    fs.collection('users').doc(primary_key).set(data);
+  void createUserDoc(String uid, Map<String, dynamic>data) {
+    fs.collection('users').doc(uid).set(data);
   }
 
   void databaseAltering() {
