@@ -8,7 +8,7 @@ environment:
 dependencies:
   flutter_web: any
   flutter_web_ui: any
-  firebase: any
+  firebase_web: any
   provider: any
 
 dev_dependencies:

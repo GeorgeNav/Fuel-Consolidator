@@ -21,12 +21,13 @@ convert:packages/convert/
 crypto:packages/crypto/
 csslib:packages/csslib/
 dart_style:packages/dart_style/
-firebase:packages/firebase/
+firebase_web:packages/firebase_web/
 fixnum:packages/fixnum/
 flutter_web:packages/flutter_web/
 flutter_web_ui:packages/flutter_web_ui/
 front_end:packages/front_end/
 glob:packages/glob/
+googleapis_auth:packages/googleapis_auth/
 graphs:packages/graphs/
 html:packages/html/
 http:packages/http/
@@ -52,6 +53,7 @@ pub_semver:packages/pub_semver/
 pubspec_parse:packages/pubspec_parse/
 quiver:packages/quiver/
 scratch_space:packages/scratch_space/
+service_worker:packages/service_worker/
 shelf:packages/shelf/
 shelf_web_socket:packages/shelf_web_socket/
 source_maps:packages/source_maps/

@@ -155,13 +155,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.8"
-  firebase:
+  firebase_web:
     dependency: "direct main"
     description:
-      name: firebase
+      name: firebase_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.0.3"
+    version: "5.0.9"
   fixnum:
     dependency: transitive
     description:
@@ -201,6 +201,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.7"
+  googleapis_auth:
+    dependency: transitive
+    description:
+      name: googleapis_auth
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.8"
   graphs:
     dependency: transitive
     description:
@@ -378,6 +385,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.0.3+2"
+  service_worker:
+    dependency: transitive
+    description:
+      name: service_worker
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.3"
   shelf:
     dependency: transitive
     description:

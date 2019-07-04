@@ -1,5 +1,5 @@
 import 'package:flutter_web/material.dart';
-import 'package:firebase/firebase.dart';
+import 'package:firebase_web/firebase.dart';
 import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {

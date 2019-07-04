@@ -1,6 +1,6 @@
 import 'package:flutter_web/material.dart';
-import 'package:firebase/firebase.dart';
-import 'package:firebase/firestore.dart';
+import 'package:firebase_web/firebase.dart';
+import 'package:firebase_web/firestore.dart';
 import 'package:provider/provider.dart';
 
 class CreateAccount extends StatefulWidget {
@@ -10,77 +10,102 @@ class CreateAccount extends StatefulWidget {
 }
 
 class _CreateAccountState extends State<CreateAccount> {
+  String _email;
+  String _password;
+
   Map<String, dynamic> data = {
     'first_name': '',
     'last_name': '',
-    'rate_history': [],
-    'requested_gallons': 0,
+    'address_1': '',
+    'address_2': '',
+    'city': '',
+    'state': '',
+    'zipcode': 00000,
   };
-  TextEditingController _email = TextEditingController();
-  TextEditingController _password = TextEditingController();
-  TextEditingController _same_password = TextEditingController();
 
   @override
   Widget build(BuildContext context) => Scaffold(
     body: Center(
       child: Container(
-        padding: EdgeInsets.all(8),
-        margin: EdgeInsets.all(8),
+        padding: EdgeInsets.all(16),
         width: 500,
         child: Column(
           children: <Widget>[
             TextField(
-              controller: _email,
-              decoration: InputDecoration(
-                hintText: 'email',
-              ),
-              onChanged: (String text) {
-                setState(() {});
-              },
-            ),
-            if(!_validEmail()) Text('Please enter a valid email address'),
-            TextField(
-              decoration: InputDecoration(
-                hintText: 'first name',
-              ),
-              onChanged: (String text) {
-                data['first_name'] = text;
-              },
+              decoration: InputDecoration(hintText: 'Email'),
+              onChanged: (String text) => _email = text,
             ),
             TextField(
-              decoration: InputDecoration(
-                hintText: 'last name',
-              ),
-              onChanged: (String text) {
-                data['last_name'] = text;
-              },
-            ),
-            TextField(
-              controller: _password,
               obscureText: true,
-              decoration: InputDecoration(
-                hintText: 'password',
-              ),
-              onChanged: (String text) {
-                setState(() {});
-              },
+              decoration: InputDecoration(hintText: 'Password'),
+              onChanged: (String text) => _password = text,
+            ),
+            Row(
+              children: <Widget>[
+                Flexible(
+                  child: TextField(
+                    maxLength: 50,
+                    decoration: InputDecoration(hintText: 'First Name'),
+                    onChanged: (String text) => data['first_name'] = text,
+                  ),
+                ),
+                Spacer(flex: 1),
+                Flexible(
+                  child: TextField(
+                    maxLength: 50,
+                    decoration: InputDecoration(hintText: 'Last Name'),
+                    onChanged: (String text) => data['last_name'] = text,
+                  ),
+                ),
+              ],
             ),
             TextField(
-              controller: _same_password,
-              obscureText: true,
-              decoration: InputDecoration(
-                hintText: 're-enter password',
-              ),
-              onChanged: (String text) {
-                setState(() {});
-              },
+              maxLength: 100,
+              decoration: InputDecoration(hintText: 'Address 1'),
+              onChanged: (String text) => data['address_1'] = text,
             ),
-            if(_password.text != _same_password.text) Text('Password needs to match!'),
+            TextField(
+              maxLength: 100,
+              decoration: InputDecoration(hintText: 'Address 2'),
+              onChanged: (String text) => data['address_2'] = text,
+            ),
+            Row(
+              children: <Widget>[
+                Flexible(
+                  child: TextField(
+                    maxLength: 100,
+                    decoration: InputDecoration(hintText: 'City'),
+                    onChanged: (String text) => data['city'] = text,
+                  ),
+                ),
+                Spacer(flex: 1),
+                Flexible(
+                  child: TextField(
+                    maxLength: 9,
+                    decoration: InputDecoration(hintText: 'Zipcode'),
+                    onChanged: (String text) => data['zipcode'] = text,
+                  ),
+                ),
+                Spacer(flex: 1),
+                DropdownButton<String>(
+                  value: data['state'],
+                  hint: Text('State'),
+                  items: ['AL', 'AK', 'AS', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'DC', 'FM', 'FL', 'GA', 'GU', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MH', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'MP', 'OH', 'OK', 'OR', 'PW', 'PA', 'PR', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VI', 'VA', 'WA', 'WV', 'WI', 'WY'].map(
+                    (String value) => DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    )).toList(),
+                  onChanged: (selection) {
+                    setState(() {
+                      data['state'] = selection;
+                    });
+                  },
+                ),
+              ],
+            ),
             FlatButton(
               onPressed: () async {
-                if(await _createUser()) {
-                  Navigator.pop(context);
-                }
+                await _createUser();
               },
               textColor: Colors.black,
               child: Text('Create Account'),
@@ -93,25 +118,28 @@ class _CreateAccountState extends State<CreateAccount> {
 
   bool _validEmail() {
     String p = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regExp = new RegExp(p);
+    RegExp regExp = RegExp(p);
 
-    return regExp.hasMatch(_email.text);
+    return regExp.hasMatch(_email);
   }
 
-  bool _createUser() {
+  void _createUser() async {
     Auth a = Provider.of<Auth>(context);
 
-    a.createUserWithEmailAndPassword(_email.text, _password.text)
+    if(!_validEmail()) return;
+
+    print(_email);
+    print(_password);
+
+    await a.createUserWithEmailAndPassword(_email, _password)
       .then((_) {
         a.currentUser.sendEmailVerification();
         Firestore fs = Provider.of<Firestore>(context);
         fs.collection('users').doc(a.currentUser.uid).set(data);
-        print('Account Created!');
-        return true;
+        print('ACCOUNT CREATED!');
+        Navigator.pop(context);
       }).catchError((error) {
-        print('CREATE_USER_ERROR: ' + error);
-        return false;
+        print('CREATE USER ERROR: ' + error);
     });
-    return true;
   }
 }

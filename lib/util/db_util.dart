@@ -1,5 +1,5 @@
-import 'package:firebase/firebase.dart';
-import 'package:firebase/firestore.dart';
+import 'package:firebase_web/firebase.dart';
+import 'package:firebase_web/firestore.dart';
 
 class DBUtil {
   Firestore fs;
@@ -30,4 +30,6 @@ class DBUtil {
         print(doc.data())
     );
   }
+
+  
 }
