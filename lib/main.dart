@@ -2,9 +2,7 @@ import 'package:flutter_web/material.dart';
 import 'package:firebase/firestore.dart';
 import 'package:firebase/firebase.dart';
 import 'package:provider/provider.dart';
-import 'screens/user/user_type.dart';
-import 'screens/create_account.dart';
-import 'screens/sign_in.dart';
+import 'imports.dart';
 
 void main() {
   App myApp = initializeApp(
@@ -46,9 +44,9 @@ class MyApp extends StatelessWidget {
         primaryColorDark: Colors.blueGrey,
       ),
       routes: {
-        '/': (context) => SignIn(),
+        '/': (context) => Home(),
         '/create_account': (context) => CreateAccount(),
-        '/user_type': (context) => UserType(),
+        '/client': (context) => Client(),
       },
       initialRoute: '/',
     ),

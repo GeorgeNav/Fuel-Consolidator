@@ -2,13 +2,13 @@ import 'package:flutter_web/material.dart';
 import 'package:firebase/firebase.dart';
 import 'package:provider/provider.dart';
 
-class SignIn extends StatefulWidget {
-  SignIn({Key key}) : super(key: key);
+class Home extends StatefulWidget {
+  Home({Key key}) : super(key: key);
 
-  _SignInState createState() => _SignInState();
+  _HomeState createState() => _HomeState();
 }
 
-class _SignInState extends State<SignIn> {
+class _HomeState extends State<Home> {
   TextEditingController _email = TextEditingController();
   TextEditingController _password = TextEditingController();
   String _logInInfo = '';
@@ -79,7 +79,7 @@ class _SignInState extends State<SignIn> {
 
   bool _validEmail() {
     String p = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regExp = new RegExp(p);
+    RegExp regExp = RegExp(p);
 
     return regExp.hasMatch(_email.text);
   }
@@ -94,8 +94,9 @@ class _SignInState extends State<SignIn> {
           print('Your id: ' + a.currentUser.uid);
           if(a.currentUser.emailVerified) {
             _logInInfo = a.currentUser.email + ' is verified and signed in';
+            // TODO: implement employee log in
             setState(() {
-              Navigator.of(context).pushNamed('/user_type');
+              Navigator.of(context).pushNamed('/client');
             });
           } else {
             a.signOut();
