@@ -92,7 +92,13 @@ class _HomeState extends State<Home> {
       a.signInWithEmailAndPassword(_email.text, _password.text)
         .then((_) {
           print('Your id: ' + a.currentUser.uid);
-          if(a.currentUser.emailVerified) {
+          _logInInfo = a.currentUser.email + ' is signed in';
+          // TODO: implement employee log in
+          setState(() {
+            Navigator.of(context).pushNamed('/client');
+          });
+          // TODO: decide on verifiing email
+/*           if(a.currentUser.emailVerified) {
             _logInInfo = a.currentUser.email + ' is verified and signed in';
             // TODO: implement employee log in
             setState(() {
@@ -101,7 +107,7 @@ class _HomeState extends State<Home> {
           } else {
             a.signOut();
             _logInInfo = 'Email isn\'t verified!';
-          }
+          } */
         }).catchError((error) {
           _logInInfo = 'SIGN_IN_ERROR: ' + error.toString();
       });

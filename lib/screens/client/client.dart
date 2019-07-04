@@ -12,47 +12,41 @@ class Client extends StatefulWidget {
 class _ClientState extends State<Client> {
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      actions: <Widget>[
-        FlatButton(
-          onPressed: () {
-            Auth a = Provider.of<Auth>(context);
-            a.signOut();
-            setState(() {
-              Navigator.pop(context);
-            });
-          },
-          textColor: Colors.black,
-          child: Text('Logout'),
+  Widget build(BuildContext context) => DefaultTabController(
+    length: 2,
+    child: Scaffold(
+      appBar: AppBar(
+        bottom: TabBar(
+          tabs: <Widget>[
+            Tab(icon: Icon(Icons.portrait)),
+            Tab(icon: Icon(Icons.power)),
+          ],
         ),
-      ],
-    ),
-    backgroundColor: Colors.blueGrey,
-    body: Center(
-      child: Container(
-        width: 500,
-        padding: EdgeInsets.all(8),
-        margin: EdgeInsets.all(8),
-        child: Center(
-          child: Column(
-            children: <Widget>[
-              Text('Hi you are logged in!'),
-              _userData(),
-              FlatButton(
-                child: Text('Update UI'),
-                onPressed: () {
-                  setState(() {});
-                },
-              ),
-            ],
+        actions: <Widget>[
+          FlatButton(
+            onPressed: () {
+              Auth a = Provider.of<Auth>(context);
+              a.signOut();
+              setState(() {
+                Navigator.pop(context);
+              });
+            },
+            textColor: Colors.black,
+            child: Text('Logout'),
           ),
-        ),
+        ],
+      ),
+      backgroundColor: Colors.blueGrey,
+      body: TabBarView(
+        children: <Widget>[
+          _userProfile(),
+          _userQuotes(),
+        ],
       ),
     ),
   );
 
-  Widget _userData() {
+  Widget _userProfile() {
     Firestore fs = Provider.of<Firestore>(context);
     Auth a = Provider.of<Auth>(context);
     
@@ -66,12 +60,52 @@ class _ClientState extends State<Client> {
             Map<String, dynamic> data = snapshot.data;
             List<Widget> textWidgets = <Widget>[];
             data.forEach((String key, dynamic value) {
-              textWidgets.add(Text(key.toString() + ': ' + value.toString()));
+              textWidgets.add(
+                getCard(key.toString() + ': ' + value.toString(), Colors.yellow)
+              );
             });
-          return Column(children: textWidgets);
+          return ListView(children: textWidgets);
         }
       },
       initialData: CircularProgressIndicator(),
     );
   }
+  _userQuotes() {
+    Firestore fs = Provider.of<Firestore>(context);
+    Auth a = Provider.of<Auth>(context);
+    
+    return FutureBuilder(
+      future: fs.collection('quotes')
+        .doc(a.currentUser.uid).get().then((doc) => doc.data()),
+      builder: (context, snapshot) {
+        if(snapshot.connectionState != ConnectionState.done) {
+          return CircularProgressIndicator();
+        } else {
+            Map<String, dynamic> data = snapshot.data;
+            List<Widget> textWidgets = <Widget>[];
+            data.forEach((String key, dynamic value) {
+              textWidgets.add(
+                getCard(key.toString() + ': ' + value.toString(), Colors.blue)
+              );
+            });
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: textWidgets
+          );
+        }
+      },
+      initialData: CircularProgressIndicator(),
+    );
+  }
+
+  Widget getCard(String text, Color color) => Card(
+    child: InkWell(
+      splashColor: Colors.blue,
+      child: Container(
+        padding: EdgeInsets.all(16),
+        color: color,
+        height: 200,
+        child: Center(child: Text(text)),
+      ),
+  ));
 }

@@ -20,7 +20,7 @@ class _CreateAccountState extends State<CreateAccount> {
     'address_2': '',
     'city': '',
     'state': '',
-    'zipcode': 00000,
+    'zipcode': '',
   };
 
   @override
@@ -136,6 +136,17 @@ class _CreateAccountState extends State<CreateAccount> {
         a.currentUser.sendEmailVerification();
         Firestore fs = Provider.of<Firestore>(context);
         fs.collection('users').doc(a.currentUser.uid).set(data);
+        fs.collection('users').doc(a.currentUser.uid).collection('quotes').add({
+          'quotes': [
+            fs.collection('quotes').doc(a.currentUser.uid).set({
+              'gallons_requested': 0,
+              'delivery_address': '',
+              'delivery_date': '',
+              'suggested_price': 0,
+              'total_amount_due': 0
+            })
+          ]
+        });
         print('ACCOUNT CREATED!');
         Navigator.pop(context);
       }).catchError((error) {
