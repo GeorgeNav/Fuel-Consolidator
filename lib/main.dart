@@ -39,9 +39,9 @@ class MyApp extends StatelessWidget {
     child: MaterialApp(
       title: 'Fuel Consolidator',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-        primaryColor: Colors.lightBlueAccent,
-        primaryColorDark: Colors.blueGrey,
+        primarySwatch: Colors.lightBlue,
+        primaryColor: Colors.lime,
+        primaryColorDark: Colors.black,
       ),
       routes: {
         '/': (context) => Home(),

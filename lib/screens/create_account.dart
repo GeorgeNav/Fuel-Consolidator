@@ -135,18 +135,24 @@ class _CreateAccountState extends State<CreateAccount> {
       .then((_) {
         a.currentUser.sendEmailVerification();
         Firestore fs = Provider.of<Firestore>(context);
-        fs.collection('users').doc(a.currentUser.uid).set(data);
-        fs.collection('users').doc(a.currentUser.uid).collection('quotes').add({
-          'quotes': [
-            fs.collection('quotes').doc(a.currentUser.uid).set({
-              'gallons_requested': 0,
-              'delivery_address': '',
-              'delivery_date': '',
-              'suggested_price': 0,
-              'total_amount_due': 0
-            })
-          ]
-        });
+        data['quotes'] = [
+          {
+            'quote_name': 'Sample1',
+            'gallons_requested': 5,
+            'delivery_address': '64732 Washington Drive',
+            'delivery_date': DateTime.now(),
+            'suggested_price': 20,
+            'total_amount_due': 20,
+          },{
+            'quote_name': 'Sample2',
+            'gallons_requested': 21,
+            'delivery_address': '2412 Old Town Drive',
+            'delivery_date': DateTime.now(),
+            'suggested_price': 28,
+            'total_amount_due': 21,
+          },
+        ];
+        fs.collection('clients').doc(a.currentUser.uid).set(data);
         print('ACCOUNT CREATED!');
         Navigator.pop(context);
       }).catchError((error) {

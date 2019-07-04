@@ -15,7 +15,6 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    backgroundColor: Colors.lightBlue,
     body: Center(
       child: Container(
         width: 500,
