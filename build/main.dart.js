@@ -48764,7 +48764,7 @@ r=Y.hI(s.c,D.ht)
 q=s.f
 p=P.o
 o=P.G
-q.m(0,"quotes",H.f([P.bd(["quote_name","Sample1",n,5,m,"64732 Washington Drive","delivery_date",new P.c1(Date.now(),!1),"suggested_price",20,l,20],p,o),P.bd(["quote_name","Sample2",n,21,m,"2412 Old Town Drive","delivery_date",new P.c1(Date.now(),!1),"suggested_price",28,l,21],p,o)],[[P.D,P.o,P.G]]))
+q.m(0,"quotes",H.f([P.bd(["quote_name","Sample1",n,5,m,"64732 Washington Drive","delivery_date",new P.c1(Date.now(),!1),"suggested_price",20,l,100],p,o),P.bd(["quote_name","Sample2",n,21,m,"2412 Old Town Drive","delivery_date",new P.c1(Date.now(),!1),"suggested_price",28,l,588],p,o)],[[P.D,P.o,P.G]]))
 D.Am(J.z9(r.a,"clients")).iL(0,J.mZ(E.ms(t.gkp(u)).a)).nZ(0,q)
 P.jd("ACCOUNT CREATED!")
 K.k1(s.c).l0(null,o)},

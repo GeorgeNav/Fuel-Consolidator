@@ -142,14 +142,14 @@ class _CreateAccountState extends State<CreateAccount> {
             'delivery_address': '64732 Washington Drive',
             'delivery_date': DateTime.now(),
             'suggested_price': 20,
-            'total_amount_due': 20,
+            'total_amount_due': 100,
           },{
             'quote_name': 'Sample2',
             'gallons_requested': 21,
             'delivery_address': '2412 Old Town Drive',
             'delivery_date': DateTime.now(),
             'suggested_price': 28,
-            'total_amount_due': 21,
+            'total_amount_due': 21*28,
           },
         ];
         fs.collection('clients').doc(a.currentUser.uid).set(data);
