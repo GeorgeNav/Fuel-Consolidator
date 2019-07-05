@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
       title: 'Fuel Consolidator',
       theme: ThemeData(
         primarySwatch: Colors.lightBlue,
-        primaryColor: Colors.lime,
+        primaryColor: Colors.blueGrey,
         primaryColorDark: Colors.black,
       ),
       routes: {

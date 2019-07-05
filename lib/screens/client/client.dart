@@ -46,14 +46,6 @@ class _ClientState extends State<Client> {
       ),
     ),
   );
-  
-  Widget _userQuotes() => Column(
-    children: <Widget>[
-      Text('Quotes'),
-      _userQuote(0),
-      _userQuote(1),
-    ],
-  );
 
   Widget _userProfile() {
     Firestore fs = Provider.of<Firestore>(context);
@@ -62,45 +54,57 @@ class _ClientState extends State<Client> {
     return FutureBuilder(
       future: fs.collection('clients')
         .doc(a.currentUser.uid).get().then((doc) => doc.data()),
+      initialData: CircularProgressIndicator(),
       builder: (context, snapshot) {
         if(snapshot.connectionState != ConnectionState.done) {
           return CircularProgressIndicator();
-        } else {
-            Map<String, dynamic> data = snapshot.data;
-            List<Widget> children = <Widget>[];
-            data.forEach((String key, dynamic value) {
-              children.add(getUserInfoCard(key, value.toString(), Colors.red, Colors.blue));
-            });
-          return ListView(children: children);
         }
+        Map<String, dynamic> data = snapshot.data;
+        List<Widget> children = <Widget>[];
+        data.forEach((String key, dynamic value) {
+          children.add(getUserInfoCard(key, value.toString(), Colors.lightBlue, Colors.white));
+        });
+        return ListView(children: children);
       },
-      initialData: CircularProgressIndicator(),
     );
   }
-
-  Widget _userQuote(int index) {
+  
+  Widget _userQuotes() {
     Firestore fs = Provider.of<Firestore>(context);
     Auth a = Provider.of<Auth>(context);
-    
+
     return FutureBuilder(
       future: fs.collection('clients')
         .doc(a.currentUser.uid).get().then((doc) => doc.data()),
+      initialData: CircularProgressIndicator(),
       builder: (context, snapshot) {
         if(snapshot.connectionState != ConnectionState.done) {
-          return CircularProgressIndicator();
-        } else {
-            Map<String, dynamic> data = snapshot.data['quotes'][index];
-            List<Widget> children = <Widget>[];
-            data.forEach((String key, dynamic value) {
-              children.add(getQuoteInfoCard(key, value.toString(), Colors.red, Colors.blue));
-            });
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: children
-          );
+          return LinearProgressIndicator();
         }
+        List<dynamic> quotes = snapshot.data['quotes'];
+        List<Widget> quote_children = <Widget>[];
+        quotes.forEach((map) {
+          List<Widget> quote_data = <Widget>[];
+          map.forEach((String key, dynamic value) {
+            quote_data.add(getQuoteInfoCard(key, value.toString(), Colors.lightBlue, Colors.white));
+          });
+          quote_children.add(Container(
+            margin: EdgeInsets.all(8),
+            padding: EdgeInsets.all(8),
+            color: Colors.white,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: quote_data,
+              ),
+            ),
+          ));
+        });
+
+        return Column(
+          children: quote_children,
+        );
       },
-      initialData: CircularProgressIndicator(),
     );
   }
 
