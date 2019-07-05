@@ -3,6 +3,7 @@ import 'package:flutter_web/material.dart';
 import 'package:firebase_web/firebase.dart';
 import 'package:flutter_web/painting.dart';
 import 'package:provider/provider.dart';
+import 'dart:math';
 
 class Client extends StatefulWidget {
   Client({Key key}) : super(key: key);
@@ -133,6 +134,8 @@ class _ClientState extends State<Client> {
     try {
       quote_data['gallons_requested'] = int.parse(quote_data['gallons_requested']);
       quote_data['delivery_date'] = DateTime.now();
+      quote_data['suggested_price'] = Random().nextInt(100);
+      quote_data['total_amount_due'] = quote_data['suggested_price'] * quote_data['gallons_requested'];
     } catch(e) {
       print(e);
       return false;
