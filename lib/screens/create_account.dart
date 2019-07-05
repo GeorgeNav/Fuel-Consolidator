@@ -126,10 +126,15 @@ class _CreateAccountState extends State<CreateAccount> {
   void _createUser() async {
     Auth a = Provider.of<Auth>(context);
 
-    if(!_validEmail()) return;
-
-    print(_email);
-    print(_password);
+    if(!_validEmail() ||
+      data['first_name'].length < 1 ||
+      data['last_name'].length < 1 ||
+      data['address_1'].length < 1 ||
+      data['city'].length < 1 ||
+      data['state'].length < 1 ||
+      data['zipcode'].length < 5) {
+      return;
+    }
 
     await a.createUserWithEmailAndPassword(_email, _password)
       .then((_) {
