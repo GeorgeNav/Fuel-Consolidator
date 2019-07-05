@@ -1,8 +1,6 @@
 .packages
-Icon
 assets/AssetManifest.json
 assets/FontManifest.json
-assets/images/Icon
 assets/images/barrel.png
 assets/images/fire.svg
 assets/images/gas.svg
@@ -43,7 +41,6 @@ packages/front_end/src/fasta/dill/README.md
 packages/front_end/src/fasta/kernel/README.md
 packages/front_end/src/fasta/parser/parser.md
 packages/front_end/src/fasta/source/README.md
-packages/fuel_consolidator/util/Icon
 packages/intl/src/data/dates/README.txt
 packages/intl/src/data/dates/patterns/af.json
 packages/intl/src/data/dates/patterns/am.json

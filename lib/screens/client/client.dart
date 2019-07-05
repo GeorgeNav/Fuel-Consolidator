@@ -11,15 +11,24 @@ class Client extends StatefulWidget {
 }
 
 class _ClientState extends State<Client> {
+  Map<String, dynamic> quote_data = {
+    'quote_name': '',
+    'gallons_requested': 0,
+    'delivery_address': '',
+    'delivery_date': DateTime.now(),
+    'suggested_price': 0,
+    'total_amount_due': 0,
+  };
 
   @override
   Widget build(BuildContext context) => DefaultTabController(
-    length: 2,
+    length: 3,
     child: Scaffold(
       appBar: AppBar(
         bottom: TabBar(
           tabs: <Widget>[
             Tab(icon: Icon(Icons.portrait)),
+            Tab(icon: Icon(Icons.add)),
             Tab(icon: Icon(Icons.history)),
           ],
         ),
@@ -41,6 +50,7 @@ class _ClientState extends State<Client> {
       body: TabBarView(
         children: <Widget>[
           _userProfile(),
+          _createQuote(),
           _userQuotes(),
         ],
       ),
@@ -67,6 +77,83 @@ class _ClientState extends State<Client> {
         return ListView(children: children);
       },
     );
+  }
+
+  Map<String, TextEditingController> controllers = {
+    'name': TextEditingController(),
+    'gallons_requested': TextEditingController(),
+    'delivery_address': TextEditingController(),
+  };
+
+  Widget _createQuote() => Container(
+    margin: EdgeInsets.all(8),
+    padding: EdgeInsets.all(8),
+    child: Column(
+      children: <Widget>[
+        TextField(
+          controller: controllers['name'],
+          decoration: InputDecoration(hintText: 'Name of the quote (example: Quote 1)'),
+          onChanged: (String text) => quote_data['quote_name'] = text,
+        ),
+        TextField(
+          controller: controllers['gallons_requested'],
+          decoration: InputDecoration(hintText: 'Amount of gallons you are requesting'),
+          onChanged: (String text) => quote_data['gallons_requested'] = text,
+        ),
+        TextField(
+          controller: controllers['delivery_address'],
+          decoration: InputDecoration(hintText: 'Delivery address'),
+          onChanged: (String text) => quote_data['delivery_address'] = text,
+        ),
+        FlatButton(
+          onPressed: () async {
+            if(await _addQuoteToDatabase()) {
+              setState(() {});
+              Scaffold.of(context).showSnackBar(SnackBar(
+                content: Text('Added quote your quote to our database'),
+              ));
+            }
+          },
+          textColor: Colors.black,
+          child: Text('Inquire for a Quote'),
+        ),
+      ],
+    ),
+  );
+  Future<bool> _addQuoteToDatabase() async {
+    Firestore fs = Provider.of<Firestore>(context);
+    Auth a = Provider.of<Auth>(context);
+
+    if (quote_data['quote_name']         == '' ||
+        quote_data['gallons_requested']  == '' ||
+        quote_data['delivery_address']   == ''     ) {
+      return false;
+    }
+
+    try {
+      quote_data['gallons_requested'] = int.parse(quote_data['gallons_requested']);
+      quote_data['delivery_date'] = DateTime.now();
+    } catch(e) {
+      print(e);
+      return false;
+    }
+
+    await fs.collection('clients').doc(a.currentUser.uid).set({
+        'quotes': FieldValue.arrayUnion([quote_data])
+      },
+      SetOptions(merge: true)
+    ).then((_) {
+      quote_data['quote_name'] = '';
+      quote_data['gallons_requested'] = '';
+      quote_data['delivery_address'] = '';
+      controllers['name'].clear();
+      controllers['gallons_requested'].clear();
+      controllers['delivery_address'].clear();
+    }).catchError((error) {
+      print(error);
+      return false;
+    });
+    return true;
   }
   
   Widget _userQuotes() {
@@ -101,7 +188,7 @@ class _ClientState extends State<Client> {
           ));
         });
 
-        return Column(
+        return ListView(
           children: quote_children,
         );
       },
