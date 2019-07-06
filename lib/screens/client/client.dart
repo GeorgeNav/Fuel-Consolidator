@@ -20,6 +20,7 @@ class _ClientState extends State<Client> {
     'suggested_price': 0,
     'total_amount_due': 0,
   };
+  int suggested_price = Random().nextInt(100);
 
   @override
   Widget build(BuildContext context) => DefaultTabController(
@@ -65,10 +66,10 @@ class _ClientState extends State<Client> {
     return FutureBuilder(
       future: fs.collection('clients')
         .doc(a.currentUser.uid).get().then((doc) => doc.data()),
-      initialData: CircularProgressIndicator(),
+      initialData: LinearProgressIndicator(),
       builder: (context, snapshot) {
         if(snapshot.connectionState != ConnectionState.done) {
-          return CircularProgressIndicator();
+          return LinearProgressIndicator();
         }
         Map<String, dynamic> data = snapshot.data;
         List<Widget> children = <Widget>[];
@@ -86,55 +87,81 @@ class _ClientState extends State<Client> {
     'delivery_address': TextEditingController(),
   };
 
-  Widget _createQuote() => Container(
-    margin: EdgeInsets.all(8),
-    padding: EdgeInsets.all(8),
-    child: Column(
-      children: <Widget>[
-        TextField(
-          controller: controllers['name'],
-          decoration: InputDecoration(hintText: 'Name of the quote (example: Quote 1)'),
-          onChanged: (String text) => quote_data['quote_name'] = text,
-        ),
-        TextField(
-          controller: controllers['gallons_requested'],
-          decoration: InputDecoration(hintText: 'Amount of gallons you are requesting'),
-          onChanged: (String text) => quote_data['gallons_requested'] = text,
-        ),
-        TextField(
-          controller: controllers['delivery_address'],
-          decoration: InputDecoration(hintText: 'Delivery address'),
-          onChanged: (String text) => quote_data['delivery_address'] = text,
-        ),
-        FlatButton(
-          onPressed: () async {
-            if(await _addQuoteToDatabase()) {
-              setState(() {});
-              Scaffold.of(context).showSnackBar(SnackBar(
-                content: Text('Added quote your quote to our database'),
-              ));
+  Widget _createQuote() {
+    Firestore fs = Provider.of<Firestore>(context);
+    Auth a = Provider.of<Auth>(context);
+
+    return Container(
+      margin: EdgeInsets.all(8),
+      padding: EdgeInsets.all(8),
+      child: Column(
+        children: <Widget>[
+          TextField(
+            controller: controllers['name'],
+            decoration: InputDecoration(hintText: 'Name of the quote (example: Quote 1)'),
+            onChanged: (String text) => quote_data['quote_name'] = text,
+          ),
+          TextField(
+            controller: controllers['gallons_requested'],
+            decoration: InputDecoration(hintText: 'Amount of gallons you are requesting'),
+            onChanged: (String text) {
+              setState(() {
+                try {
+                  quote_data['gallons_requested'] = int.parse(text);
+                  quote_data['total_amount_due'] = quote_data['gallons_requested'] * suggested_price;
+                } catch(error) {
+                  quote_data['gallons_requested'] = 0;
+                  quote_data['total_amount_due'] = 0;
+                }
+              });
             }
-          },
-          textColor: Colors.black,
-          child: Text('Inquire for a Quote'),
-        ),
-      ],
-    ),
-  );
+          ),
+          FutureBuilder(
+            future: fs.collection('clients')
+              .doc(a.currentUser.uid).get().then((doc) => doc.data()),
+            initialData: LinearProgressIndicator(),
+            builder: (context, snapshot) {
+              if(snapshot.connectionState != ConnectionState.done) {
+                return LinearProgressIndicator();
+              }
+              quote_data['delivery_address'] =
+                snapshot.data['address_1'] + ', ' +
+                snapshot.data['zipcode'] + ' ' +
+                snapshot.data['city'] + ', ' + snapshot.data['state'];
+              return Text('Address: ' + quote_data['delivery_address']);
+            }
+          ),
+          Text('Date and Time: ' + DateTime.now().toString()),
+          Text('Suggested Price: ' + suggested_price.toString()),
+          Text('Total Amount Due: ' + (quote_data['gallons_requested'] * suggested_price).toString()),
+          FlatButton(
+            color: Colors.blue,
+            onPressed: () async {
+              if(await _addQuoteToDatabase()) {
+                setState(() {});
+              }
+            },
+            textColor: Colors.black,
+            child: Text('Inquire for a Quote'),
+          ),
+        ],
+      ),
+    );
+  }
+
   Future<bool> _addQuoteToDatabase() async {
     Firestore fs = Provider.of<Firestore>(context);
     Auth a = Provider.of<Auth>(context);
 
     if (quote_data['quote_name']         == '' ||
-        quote_data['gallons_requested']  == '' ||
-        quote_data['delivery_address']   == ''     ) {
+        quote_data['gallons_requested']  == '') {
       return false;
     }
 
     try {
-      quote_data['gallons_requested'] = int.parse(quote_data['gallons_requested']);
+      quote_data['gallons_requested'] = quote_data['gallons_requested'];
       quote_data['delivery_date'] = DateTime.now();
-      quote_data['suggested_price'] = Random().nextInt(100);
+      quote_data['suggested_price'] = suggested_price;
       quote_data['total_amount_due'] = quote_data['suggested_price'] * quote_data['gallons_requested'];
     } catch(e) {
       print(e);
@@ -166,7 +193,7 @@ class _ClientState extends State<Client> {
     return FutureBuilder(
       future: fs.collection('clients')
         .doc(a.currentUser.uid).get().then((doc) => doc.data()),
-      initialData: CircularProgressIndicator(),
+      initialData: LinearProgressIndicator(),
       builder: (context, snapshot) {
         if(snapshot.connectionState != ConnectionState.done) {
           return LinearProgressIndicator();
@@ -203,7 +230,7 @@ class _ClientState extends State<Client> {
       child: Container(
         padding: EdgeInsets.all(8),
         color: key_color,
-        height: 100,
+        height: 75,
         width: 500,
         child: Row(
           children: <Widget>[
