@@ -21,6 +21,7 @@ class _CreateAccountState extends State<CreateAccount> {
     'city': '',
     'state': '',
     'zipcode': '',
+    'quotes': [],
   };
 
   @override
@@ -90,7 +91,7 @@ class _CreateAccountState extends State<CreateAccount> {
                 DropdownButton<String>(
                   value: data['state'],
                   hint: Text('State'),
-                  items: ['AL', 'AK', 'AS', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'DC', 'FM', 'FL', 'GA', 'GU', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MH', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'MP', 'OH', 'OK', 'OR', 'PW', 'PA', 'PR', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VI', 'VA', 'WA', 'WV', 'WI', 'WY'].map(
+                  items: ['', 'AL', 'AK', 'AS', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'DC', 'FM', 'FL', 'GA', 'GU', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MH', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'MP', 'OH', 'OK', 'OR', 'PW', 'PA', 'PR', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VI', 'VA', 'WA', 'WV', 'WI', 'WY'].map(
                     (String value) => DropdownMenuItem<String>(
                       value: value,
                       child: Text(value),
@@ -140,23 +141,7 @@ class _CreateAccountState extends State<CreateAccount> {
       .then((_) {
         a.currentUser.sendEmailVerification();
         Firestore fs = Provider.of<Firestore>(context);
-        data['quotes'] = [
-          {
-            'quote_name': 'Sample1',
-            'gallons_requested': 5,
-            'delivery_address': '64732 Washington Drive',
-            'delivery_date': DateTime.now(),
-            'suggested_price': 20,
-            'total_amount_due': 100,
-          },{
-            'quote_name': 'Sample2',
-            'gallons_requested': 21,
-            'delivery_address': '2412 Old Town Drive',
-            'delivery_date': DateTime.now(),
-            'suggested_price': 28,
-            'total_amount_due': 21*28,
-          },
-        ];
+
         fs.collection('clients').doc(a.currentUser.uid).set(data);
         print('ACCOUNT CREATED!');
         Navigator.pop(context);

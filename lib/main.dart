@@ -30,25 +30,28 @@ class MyApp extends StatelessWidget {
   MyApp(this.fs, this.myApp, this.a);
 
   @override
-  Widget build(BuildContext context) => MultiProvider(
-    providers: [
-        Provider<Firestore>.value(value: fs),
-        Provider<App>.value(value: myApp),
-        Provider<Auth>.value(value: a),
-    ],
-    child: MaterialApp(
-      title: 'Fuel Consolidator',
-      theme: ThemeData(
-        primarySwatch: Colors.lightBlue,
-        primaryColor: Colors.blueGrey,
-        primaryColorDark: Colors.black,
+  Widget build(BuildContext context) {
+
+    return MultiProvider(
+      providers: [
+          Provider<Firestore>.value(value: fs),
+          Provider<App>.value(value: myApp),
+          Provider<Auth>.value(value: a),
+      ],
+      child: MaterialApp(
+        title: 'Fuel Consolidator',
+        theme: ThemeData(
+          primarySwatch: Colors.lightBlue,
+          primaryColor: Colors.blueGrey,
+          primaryColorDark: Colors.black,
+        ),
+        routes: {
+          '/': (context) => Home(),
+          '/create_account': (context) => CreateAccount(),
+          '/client': (context) => Client(),
+        },
+        initialRoute: '/',
       ),
-      routes: {
-        '/': (context) => Home(),
-        '/create_account': (context) => CreateAccount(),
-        '/client': (context) => Client(),
-      },
-      initialRoute: '/',
-    ),
-  );
+    );
+  }
 }
